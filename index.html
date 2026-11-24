@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ryggprogram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=Rubik:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Maskinrepubliken på svartvit e-ink: papperstemat, alla färgytor ersatta av ink och paper.
+     Layout: bläckblock överst med hålrad som räknar klara övningar, morgonrutinen på egen sida, en dag per vy. */
+  --paper:#f4efe4; --paper-raised:#fbf8f1; --paper-sunken:#eae3d4; --paper-hover:#e6decc;
+  --ink:#1c1613; --ink-muted:#4c4641; --ink-faint:#5d5752;
+  --line:#cdc8be; --line-strong:#7b756f;
+  --surface-ink:#1c1613; --on-dark:#f4efe4;
+  --focus:#1c1613;
+  --font-display:Rubik,"Helvetica Neue",Arial,sans-serif;
+  --font-prose:Fraunces,Georgia,"Times New Roman",serif;
+  --font-ui:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --font-mono:"IBM Plex Mono","Courier New",monospace;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:22px; --space-6:28px; --space-7:36px;
+  --radius-s:14px; --radius-l:22px; --radius-card:26px; --radius-pill:999px;
+  color-scheme:light;
+}
+*{box-sizing:border-box;transition:none!important;animation:none!important}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-prose);font-size:17px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+p,h1,h2{margin:0}
+.sida{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:var(--space-4);padding-bottom:var(--space-6)}
+
+/* Sidhuvud: bläck som block */
+.huvud{background:var(--surface-ink);color:var(--on-dark);padding:var(--space-3) var(--space-4);display:flex;flex-direction:column;gap:var(--space-2)}
+.huvudrad{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3)}
+.avdelning{font-family:var(--font-display);font-weight:700;font-size:16px;line-height:1;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.huvud .avdelning{color:var(--on-dark);font-size:13px}
+.huvud h1{font-family:var(--font-display);font-weight:900;font-size:22px;line-height:1;letter-spacing:-.01em;text-transform:uppercase}
+.hal{display:flex;gap:6px}
+.hal i{width:12px;height:12px;border-radius:50%;border:2px solid var(--on-dark)}
+.hal i.fylld{background:var(--on-dark)}
+.rakning{font-family:var(--font-mono);font-size:14px;line-height:1}
+
+.kropp{display:flex;flex-direction:column;gap:var(--space-4);padding:0 var(--space-4)}
+
+/* Dagar */
+.dagar{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-2)}
+.dagar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-1);min-height:60px;border:2px solid var(--line-strong);border-radius:var(--radius-pill);background:var(--paper);color:var(--ink);text-decoration:none;font-family:var(--font-ui);font-weight:600;font-size:19px;line-height:1}
+.dagar a small{font-family:var(--font-mono);font-weight:400;font-size:13px;letter-spacing:.06em}
+.dagar a[aria-current="page"]{background:var(--surface-ink);color:var(--on-dark);border-color:var(--ink)}
+.dagar a.morgon{grid-column:1/-1;flex-direction:row;gap:var(--space-3);min-height:56px;font-size:17px}
+
+/* Sektioner */
+.sektion{display:flex;flex-direction:column;gap:var(--space-4)}
+.rubrik{display:flex;flex-direction:column;gap:var(--space-2)}
+.rubrik h2{font-family:var(--font-display);font-weight:900;font-size:30px;line-height:1.02;letter-spacing:-.01em;text-transform:uppercase;text-wrap:balance}
+.svans{font-style:italic;font-size:17px;color:var(--ink-muted)}
+ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-3)}
+
+/* Övning: ett kort som går att trycka på */
+.ovning{display:grid;grid-template-columns:104px 1fr 44px;gap:var(--space-3);align-items:center;width:100%;padding:var(--space-3);background:var(--paper-raised);border:2px solid var(--line-strong);border-radius:var(--radius-l);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.bild{background:var(--paper-sunken);border-radius:var(--radius-s);padding:var(--space-1)}
+.bild svg{display:block;width:100%;height:auto}
+.b{fill:none;stroke:var(--ink);stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.pr{fill:none;stroke:var(--line-strong);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.g{fill:none;stroke:var(--line-strong);stroke-width:1.5;stroke-linecap:round}
+.hd{fill:var(--ink)}
+.text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.namn{font-style:italic;font-size:21px;line-height:1.2}
+.dos{font-family:var(--font-mono);font-size:15px;line-height:1.4}
+.tips{font-size:15px;line-height:1.4;color:var(--ink-muted)}
+.lage{display:flex;flex-direction:column;align-items:center;gap:var(--space-1);font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;line-height:1}
+.lage i{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);background:var(--paper)}
+.ovning[aria-checked="true"]{background:var(--paper-sunken)}
+.ovning[aria-checked="true"] .bild{background:var(--paper)}
+.ovning[aria-checked="true"] .lage i{background:var(--ink)}
+.ovning[aria-checked="true"] .namn{text-decoration:line-through}
+
+@media (hover:hover){.ovning:hover,.dagar a:not([aria-current="page"]):hover{background:var(--paper-hover)}}
+a:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+@media (max-width:359px){.ovning{grid-template-columns:84px 1fr 40px}}
+</style>
+</head>
+<body>
+<div class="sida">
+  <header class="huvud">
+    <div class="huvudrad"><h1>Ryggprogram</h1><span class="rakning" id="rakning"></span></div>
+    <div class="huvudrad"><span class="avdelning" id="dagrad"></span><div class="hal" id="hal" aria-hidden="true"></div></div>
+  </header>
+  <main class="kropp">
+    <nav class="dagar" id="dagar" aria-label="Sidor"></nav>
+    <div id="vy" class="kropp" style="padding:0"></div>
+
+  </main>
+</div>
+<script>
+/* Figurer: h = huvud, l = kropp, p = redskap */
+var FIG={
+ kat:{h:[96,53],l:["M88 70 L86 46 Q65 24 44 46 L44 70 L22 70"]},
+ back:{h:[16,62],l:["M26 64 L62 46 L88 42 L92 70","M26 64 L56 68"]},
+ fagel:{h:[91,35],l:["M110 40 L80 44 L44 44 L10 42","M80 44 L80 70","M44 44 L46 70 L26 70"]},
+ ga:{h:[60,13],l:["M60 21 L60 46","M60 46 L70 58 L72 70","M60 46 L52 58 L44 68","M60 25 L67 36 L74 40","M60 25 L54 37 L48 42"]},
+ ext:{h:[96,20],l:["M30 68 L88 26","M88 26 L80 37 L89 35"],p:["M49 50 L61 59","M56 56 L56 72","M22 72 L36 62"]},
+ press:{h:[16,25],l:["M20 34 L36 58 L58 40 L80 34","M20 36 L34 54"],p:["M10 32 L28 64 L46 64","M78 18 L90 46"]},
+ lat:{h:[60,26],l:["M60 33 L60 58","M50 36 L70 36","M50 36 L40 24 L36 12","M70 36 L80 24 L84 12","M60 58 L48 60 L48 70","M60 58 L72 60 L72 70"],p:["M26 12 L94 12","M60 12 L60 2"]},
+ planka:{h:[25,40],l:["M104 68 L34 46","M34 46 L34 68 L18 68"]}
+};
+var MORGON=[
+ ["Katt–ko","10 långsamma","På alla fyra. Runda ryggen, svanka sedan mjukt.","kat"],
+ ["Fågelhunden","2 x 8 per sida","Motsatt arm och ben. Höften still.","fagel"],
+ ["Bäckenlyft","2 x 12","Hälarna i golvet, lyft höften, knip rumpan.","back"],
+ ["Promenad","10 min","Lugnt tempo, gärna utomhus.","ga"]
+];
+function styrka(ben,lat){return {t:"Styrka",w:"Värm upp 5 min på gång eller cykel. Vikterna är förslag: ha 3–4 repetitioner kvar i varje set, annars stanna på förra vikten.",x:[
+ ["Benpress","3 x 10 · "+ben,"Ländryggen mot dynan, lås inte knäna.","press"],
+ ["Latsdrag","3 x 10 · "+lat,"Stången mot bröstet, armbågarna nedåt.","lat"],
+ ["Ryggresning","2 x 10 · utan vikt","Res till rak kropp, inte högre.","ext"],
+ ["Planka","3 x 20–30 sek","Rak kropp, spänn mage och rumpa.","planka"]]}}
+var GANG={t:"Promenad",w:"Inga vikter i dag.",x:[
+ ["Promenad eller cykel","30 min","Tempo där det går att prata.","ga"]]};
+var DAGAR=[styrka("30–37,5 kg","25 kg"),GANG,styrka("37,5 kg","25 kg"),GANG,styrka("45 kg","30 kg")];
+var NYCKEL="ryggprogram-v2",klara={},IDAG="";
+try{IDAG=new Date().toLocaleDateString("sv-SE")}catch(e){IDAG=String(new Date().getDate())}
+try{klara=JSON.parse(localStorage.getItem(NYCKEL)||"{}")||{}}catch(e){klara={}}
+/* Morgonrutinen börjar om varje dag */
+for(var gammal in klara)if(gammal.charAt(0)==="m"&&gammal.indexOf("m"+IDAG+"-")!==0)delete klara[gammal];
+function spara(){try{localStorage.setItem(NYCKEL,JSON.stringify(klara))}catch(e){}}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function vy(){var m=/^#dag-([1-5])$/.exec(location.hash);return m?+m[1]:0} /* 0 = morgon */
+function prefix(v){return v?"d"+v+"-":"m"+IDAG+"-"}
+function rader(v){return v?DAGAR[v-1].x:MORGON}
+function figur(k){
+  var f=FIG[k],s='<svg viewBox="0 0 120 78" aria-hidden="true"><path class="g" d="M4 74H116"/>';
+  (f.p||[]).forEach(function(d){s+='<path class="pr" d="'+d+'"/>'});
+  f.l.forEach(function(d){s+='<path class="b" d="'+d+'"/>'});
+  return s+'<circle class="hd" cx="'+f.h[0]+'" cy="'+f.h[1]+'" r="6.5"/></svg>';
+}
+function lista(v){
+  return "<ul>"+rader(v).map(function(r,i){
+    var id=prefix(v)+i,pa=!!klara[id];
+    return '<li><button type="button" class="ovning" role="checkbox" aria-checked="'+pa+'" data-id="'+id+'">'+
+      '<span class="bild">'+figur(r[3])+'</span>'+
+      '<span class="text"><span class="namn">'+esc(r[0])+'</span><span class="dos">'+esc(r[1])+'</span><span class="tips">'+esc(r[2])+'</span></span>'+
+      '<span class="lage"><i></i><span class="ord">'+(pa?"Klar":"Kvar")+'</span></span></button></li>';
+  }).join("")+"</ul>";
+}
+function rakna(v){
+  var n=0,p=prefix(v);
+  for(var k in klara)if(klara[k]&&k.indexOf(p)===0)n++;
+  return [n,rader(v).length];
+}
+function marke(c){return c[0]===c[1]?"KLAR":c[0]+"/"+c[1]}
+function huvud(v){
+  var c=rakna(v),h="",i;
+  document.getElementById("dagrad").textContent=v?"Dag "+v+" av 5":"Morgon";
+  for(i=0;i<c[1];i++)h+='<i'+(i<c[0]?' class="fylld"':'')+'></i>';
+  document.getElementById("hal").innerHTML=h;
+  document.getElementById("rakning").textContent=c[0]+" av "+c[1]+" klara";
+  var m=rakna(0);
+  h='<a class="morgon" href="#morgon"'+(v===0?' aria-current="page"':'')+' aria-label="Morgonrutin, '+m[0]+' av '+m[1]+' klara">Morgonrutin<small>'+marke(m)+'</small></a>';
+  for(i=1;i<=5;i++){
+    var r=rakna(i);
+    h+='<a href="#dag-'+i+'"'+(i===v?' aria-current="page"':'')+' aria-label="Dag '+i+', '+r[0]+' av '+r[1]+' klara">'+i+'<small>'+marke(r)+'</small></a>';
+  }
+  document.getElementById("dagar").innerHTML=h;
+}
+function rita(){
+  var v=vy(),D=v?DAGAR[v-1]:null;
+  document.getElementById("vy").innerHTML=v?
+    '<section class="sektion"><div class="rubrik"><span class="avdelning">Eftermiddag</span><h2>'+esc(D.t)+'</h2><span class="svans">'+esc(D.w)+'</span></div>'+lista(v)+'</section>':
+    '<section class="sektion"><div class="rubrik"><span class="avdelning">Varje morgon</span><h2>Morgonrutin</h2><span class="svans">Fem minuter på golvet, sedan en promenad.</span></div>'+lista(0)+'</section>';
+  huvud(v);
+}
+document.getElementById("vy").addEventListener("click",function(e){
+  var b=e.target.closest(".ovning");if(!b)return;
+  var id=b.getAttribute("data-id"),pa=!klara[id];
+  if(pa)klara[id]=true;else delete klara[id];
+  spara();
+  b.setAttribute("aria-checked",pa);
+  b.querySelector(".ord").textContent=pa?"Klar":"Kvar";
+  huvud(vy());
+});
+window.addEventListener("hashchange",function(){rita();window.scrollTo(0,0)});
+rita();
+</script>
+</body>
+</html>
