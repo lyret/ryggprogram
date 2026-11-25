@@ -112,14 +112,17 @@ var MORGON=[
  ["Bäckenlyft","2 x 12","Hälarna i golvet, lyft höften, knip rumpan.","back"],
  ["Promenad","10 min","Lugnt tempo, gärna utomhus.","ga"]
 ];
-function styrka(ben,lat,n){return {t:"Styrka",w:"Värm upp 5 min på gång eller cykel. Vikterna är förslag: ha 3–4 repetitioner kvar i varje set, annars stanna på förra vikten.",x:[
- ["Benpress","3 x "+n+" · "+ben,"Ländryggen mot dynan, lås inte knäna.","press"],
- ["Latsdrag","3 x "+n+" · "+lat,"Stången mot bröstet, armbågarna nedåt.","lat"],
- ["Ryggresning","2 x "+n+" · utan vikt","Res till rak kropp, inte högre.","ext"],
- ["Planka","3 x 20–30 sek","Rak kropp, spänn mage och rumpa.","planka"]]}}
+function styrka(ben,lat,rygg,planka){return {t:"Styrka",w:"Värm upp 5 min på gång eller cykel. Vila 2 min mellan seten. Ha 3–4 repetitioner kvar i varje set, annars stanna på förra vikten.",x:[
+ ["Benpress",ben,"Ländryggen mot dynan, lås inte knäna.","press"],
+ ["Latsdrag",lat,"Stången mot bröstet, armbågarna nedåt.","lat"],
+ ["Ryggresning",rygg,"Utan vikt. Res till rak kropp, inte högre.","ext"],
+ ["Planka",planka,"Rak kropp, spänn mage och rumpa.","planka"]]}}
 var GANG={t:"Promenad",w:"Inga vikter i dag.",x:[
  ["Promenad eller cykel","30 min","Tempo där det går att prata.","ga"]]};
-var DAGAR=[styrka("30–37,5 kg","25 kg",10),GANG,styrka("37,5 kg","25–30 kg",10),GANG,styrka("37,5 kg","30 kg",12)];
+var DAGAR=[
+ styrka("3 x 10 · 30–37,5 kg","3 x 10 · 25 kg","2 x 10","3 x 20–30 sek"),GANG,
+ styrka("3 x 10 · 30, 37,5, 30 kg","3 x 10 · 25, 25, 30 kg","2 x 10","20, 30, 20 sek"),GANG,
+ styrka("3 x 12 · 30 kg","3 x 12 · 25 kg","2 x 12","3 x 20–30 sek")];
 var NYCKEL="ryggprogram-v2",klara={},IDAG="";
 try{IDAG=new Date().toLocaleDateString("sv-SE")}catch(e){IDAG=String(new Date().getDate())}
 try{klara=JSON.parse(localStorage.getItem(NYCKEL)||"{}")||{}}catch(e){klara={}}
